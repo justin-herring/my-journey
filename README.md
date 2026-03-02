@@ -1,10 +1,19 @@
 # Markdown Blog
 
-A clean, minimal blog template built with [Astro](https://astro.build). Every post is just a Markdown file — no CMS, no database. Fork it, customize it, and deploy to GitHub Pages in minutes.
+A clean, editorial-style personal blog built with [Astro](https://astro.build). Every post is a markdown file, every setting lives in one config. No CMS, no database. Fork it, make it yours, deploy to GitHub Pages.
+
+## Quick start
+
+```bash
+npm install
+npm run dev
+```
+
+Open the printed URL in your browser.
 
 ## Make it yours
 
-After forking, you only need to touch **3 files** to make the blog completely your own.
+After forking, update these files to make the blog your own.
 
 ### 1. `src/site.config.ts` — Your identity
 
@@ -20,36 +29,20 @@ This is the single source of truth for all site text. Open it and update:
 | `heroImageLetter` | Fallback initials when no image | `"JD"`, `"✦"`, or `""` |
 | `faviconLetter` | Browser tab icon character | `"J"`, `"🚀"`, `"✦"` |
 | `author.name` | Post bylines and footer | `"Jane Doe"` |
-| `social.github` | Footer link (set `""` to hide) | `"https://github.com/janedoe"` |
-| `social.linkedin` | Footer link (set `""` to hide) | `"https://linkedin.com/in/janedoe"` |
-| `social.twitter` | Footer link (set `""` to hide) | `"https://twitter.com/janedoe"` |
 | `footer.copyright` | Copyright name | `"Jane Doe"` |
 
 **Hero image options:**
 
 - **Your photo:** Drop an image in `public/` and set `heroImage: "/your-photo.jpg"`
-- **Auto-generated initials:** Set `heroImage: ""` — it will auto-generate from your author name (e.g. "Jane Doe" becomes "JD")
-- **Custom character:** Set `heroImage: ""` and `heroImageLetter: "✦"` for any letter or emoji
-- **No image:** Set both `heroImage: ""` and `heroImageLetter: ""` to hide it entirely
+- **Auto-generated initials:** Set `heroImage: ""` — generates initials from your author name
+- **Custom character:** Set `heroImage: ""` and `heroImageLetter: "✦"`
+- **No image at all:** Set both `heroImage: ""` and `heroImageLetter: ""`
 
 ### 2. `src/pages/about.md` — Your about page
 
-Edit the frontmatter and body content:
-
-```md
----
-layout: ../layouts/AboutLayout.astro
-title: "About Jane Doe"
-greeting: "Hi, I'm Jane."
-lede: "A short intro sentence about you and your blog."
----
-
-Write your about page content here in Markdown.
-```
+Edit the frontmatter and body content with your own info.
 
 ### 3. `astro.config.mjs` — Your deploy URL
-
-Update the `site` and `base` to match your GitHub repo:
 
 ```js
 export default defineConfig({
@@ -62,67 +55,169 @@ If you're using a `username.github.io` repo, set `base: '/'` instead.
 
 ### 4. Delete the example posts
 
-Remove or replace the files in `src/pages/posts/` with your own Markdown posts.
+Remove or replace the files in `src/pages/posts/` with your own.
 
 ---
 
-## Local setup
+## Writing posts
 
-```bash
-npm install
-npm run dev
-```
-
-Open the printed URL in your browser.
-
-## Adding a new post
-
-Create a new `.md` file in `src/pages/posts/`:
+Add a `.md` file to `src/pages/posts/`:
 
 ```md
 ---
-title: "My new post"
-description: "Short summary for the homepage."
-pubDate: "2025-01-15"
+layout: ../../layouts/PostLayout.astro
+title: My new post
+description: A short summary shown in the post list.
+pubDate: 2026-03-01
+readingTime: 4
 ---
 
-Write your content here in Markdown.
+Your content here.
 ```
 
-The post will automatically get its own page at `/posts/<filename>/` and appear on the homepage. Posts are sorted by date, newest first. Pagination kicks in after 10 posts.
+Posts are sorted by `pubDate` (newest first). The homepage shows the latest 6. The blog archive at `/blog/` shows all posts, paginated at 10 per page.
+
+### Adding images to posts
+
+Place images in `public/images/` and reference them in your markdown:
+
+```md
+![Diagram](/markdown-blog/images/my-diagram.svg)
+```
+
+---
+
+## Optional pages and sections
+
+Every page beyond blog posts is **optional**. You choose what your site includes. If you don't need a section, hide it — no empty pages, no dead nav links.
+
+### Videos (optional)
+
+The videos section links to external content — YouTube videos, conference talks, podcast episodes, any URL. Each entry opens in a new tab.
+
+**When enabled**, you get:
+
+- A "Latest Videos" section on the homepage (shows the 3 most recent)
+- A "Videos" link in the header and footer navigation
+- A dedicated `/videos/` archive page with auto-extracted YouTube thumbnails and pagination
+
+**To enable it**, add entries to the `videos` array in `site.config.ts`:
+
+```ts
+videos: [
+  { title: 'My talk at JSConf', url: 'https://www.youtube.com/watch?v=...' },
+  { title: 'Podcast interview', url: 'https://podcast.example.com/ep-42' },
+],
+```
+
+**To hide it completely:**
+
+```ts
+// 1. Empty the array — removes the homepage section and the /videos/ page content
+videos: [],
+
+// 2. Clear the nav label — removes the link from header and footer
+nav: {
+  videosLabel: '',
+},
+```
+
+That's it. No homepage section, no nav link, no `/videos/` page. The site works as a pure blog.
+
+### About page (optional)
+
+The about page lives at `src/pages/about.md`. To remove it, delete the file and clear the nav label:
+
+```ts
+nav: {
+  aboutLabel: '',
+},
+```
+
+### Section headings
+
+Rename the homepage section headings to match your content:
+
+```ts
+sections: {
+  writings: 'Latest Writings',   // or "Articles", "Posts", "Notes"
+  videos: 'Latest Videos',       // or "Talks", "Episodes", "Links"
+},
+```
+
+---
+
+## Social links
+
+```ts
+social: {
+  github: 'https://github.com/you',
+  linkedin: 'https://linkedin.com/in/you',
+  twitter: '',  // empty string = hidden
+},
+```
+
+Set any value to `""` to hide it from the footer.
+
+## Theme
+
+Light and dark mode with a toggle in the header. Respects the visitor's system preference on first visit. Colors are CSS custom properties in `Layout.astro` — edit the `:root` and `:root[data-theme='dark']` blocks to change the palette.
 
 ## Deploy to GitHub Pages
 
 1. Push your repo to GitHub
 2. Go to **Settings > Pages** and set **Source** to **GitHub Actions**
-3. On every push to `main`, the workflow in `.github/workflows/deploy.yml` will build and deploy
+3. On every push to `main`, the workflow builds and deploys
 
 Your site will be live at `https://<your-username>.github.io/<your-repo>/`.
 
-## Features
+To build locally:
 
-- Dark / light mode with system preference detection
-- Configurable favicon generated from a single character
-- Auto-generated avatar fallback from author initials
-- Pagination (10 posts per page)
-- Reading progress bar on posts
-- Social links in the footer
-- View Transitions for smooth navigation
-- Fully static — no JavaScript frameworks, no build dependencies beyond Astro
-- Mobile responsive
+```bash
+npm run build
+```
 
 ## Project structure
 
 ```
 src/
-  site.config.ts        ← All configurable text lives here
-  layouts/
-    Layout.astro        ← Global shell (header, footer, theme toggle)
-    PostLayout.astro    ← Blog post template
-    AboutLayout.astro   ← About page template
-  pages/
-    [...page].astro     ← Homepage with pagination
-    about.md            ← About page (edit this)
-    posts/              ← Drop .md files here to create posts
-public/                 ← Static assets (images, fonts)
+├── site.config.ts          # All site text and settings
+├── layouts/
+│   ├── Layout.astro        # Global shell (header, footer, theme)
+│   ├── PostLayout.astro    # Blog post layout with progress bar
+│   └── AboutLayout.astro   # About page layout
+├── pages/
+│   ├── index.astro         # Homepage
+│   ├── about.md            # About page (optional)
+│   ├── blog/
+│   │   └── [...page].astro # Blog archive with pagination
+│   ├── videos/
+│   │   └── [...page].astro # Videos archive with pagination (optional)
+│   └── posts/
+│       └── *.md            # Your blog posts
+public/
+├── images/                 # Post images
+└── *.jpg                   # Hero image
 ```
+
+## Commands
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview the production build |
+| `npm run check` | Run Astro's type checker |
+
+## Features
+
+- Dark / light mode with system preference detection
+- Configurable favicon from a single character
+- Auto-generated avatar fallback from author initials
+- Blog archive with numbered pagination
+- Optional videos page with YouTube thumbnail extraction
+- Reading progress bar on posts
+- Social links in the footer
+- View Transitions for smooth navigation
+- Fully static — zero JavaScript frameworks
+- Mobile responsive

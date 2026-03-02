@@ -1,0 +1,285 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../layouts/Layout.astro';
+import { siteConfig } from '../../site.config';
+
+// Extract YouTube video ID from various URL formats
+function getYouTubeId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([^&\s]+)/,
+    /(?:youtu\.be\/)([^?\s]+)/,
+    /(?:youtube\.com\/embed\/)([^?\s]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+function getThumbnailUrl(url: string): string | null {
+  const id = getYouTubeId(url);
+  return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null;
+}
+
+export const getStaticPaths = (async ({ paginate }) => {
+  return paginate(siteConfig.videos, { pageSize: 10 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const isFirstPage = page.currentPage === 1;
+const totalVideos = siteConfig.videos.length;
+---
+
+<Layout title={isFirstPage ? `Videos — ${siteConfig.title}` : `Videos · Page ${page.currentPage} — ${siteConfig.title}`}>
+  <div class="page-header">
+    <h1 class="page-title">All Videos</h1>
+    {totalVideos > 0 && (
+      <p class="page-count">{totalVideos} videos</p>
+    )}
+  </div>
+
+  {page.data.length === 0 ? (
+    <p class="empty">No videos yet. Add entries to the <code>videos</code> array in <code>src/site.config.ts</code>.</p>
+  ) : (
+    <ul class="video-list">
+      {page.data.map((video) => {
+        const thumbnail = getThumbnailUrl(video.url);
+        return (
+          <li>
+            <a href={video.url} target="_blank" rel="noopener noreferrer" class="video-link">
+              {thumbnail ? (
+                <img src={thumbnail} alt="" class="video-thumb" width="320" height="180" loading="lazy" />
+              ) : (
+                <div class="video-thumb-placeholder" />
+              )}
+              <div class="video-info">
+                <span class="video-title">{video.title}</span>
+                <svg class="external-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M3.5 10.5L10.5 3.5M10.5 3.5H5M10.5 3.5V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  )}
+
+  {page.lastPage > 1 && (
+    <nav class="pagination" aria-label="Pagination">
+      {page.url.prev ? (
+        <a href={page.url.prev} class="page-nav prev">&larr;</a>
+      ) : (
+        <span class="page-nav prev disabled">&larr;</span>
+      )}
+
+      <div class="page-numbers">
+        {Array.from({ length: page.lastPage }, (_, i) => i + 1).map((num) => (
+          num === page.currentPage ? (
+            <span class="page-num current">{num}</span>
+          ) : (
+            <a href={num === 1 ? '/markdown-blog/videos/' : `/markdown-blog/videos/${num}/`} class="page-num">{num}</a>
+          )
+        ))}
+      </div>
+
+      {page.url.next ? (
+        <a href={page.url.next} class="page-nav next">&rarr;</a>
+      ) : (
+        <span class="page-nav next disabled">&rarr;</span>
+      )}
+    </nav>
+  )}
+
+  <style>
+    .page-header {
+      max-width: var(--max-width);
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-family: var(--font-sans);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.25rem;
+    }
+
+    .page-count {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .empty {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+    }
+
+    .empty code {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      background: var(--code-bg);
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+    }
+
+    .video-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-width: var(--max-width);
+    }
+
+    .video-list li {
+      border-top: 1px solid var(--border);
+    }
+
+    .video-list li:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .video-link {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1.25rem 0;
+      text-decoration: none !important;
+      color: inherit !important;
+      transition: color var(--transition);
+    }
+
+    .video-link:hover {
+      color: var(--accent) !important;
+    }
+
+    .video-thumb {
+      flex-shrink: 0;
+      width: 160px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: var(--code-bg);
+    }
+
+    .video-thumb-placeholder {
+      flex-shrink: 0;
+      width: 160px;
+      height: 90px;
+      border-radius: 6px;
+      background: var(--code-bg);
+    }
+
+    .video-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-width: 0;
+    }
+
+    .video-title {
+      font-family: var(--font-serif);
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+
+    .external-arrow {
+      flex-shrink: 0;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+
+    .video-link:hover .external-arrow {
+      color: var(--accent);
+    }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      max-width: var(--max-width);
+      margin-top: 3rem;
+      padding-top: 2rem;
+    }
+
+    .page-numbers {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .page-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted) !important;
+      text-decoration: none !important;
+      border-radius: 8px;
+      transition: color var(--transition), background var(--transition);
+    }
+
+    .page-num:hover {
+      color: var(--text) !important;
+      background: var(--code-bg);
+    }
+
+    .page-num.current {
+      color: var(--text) !important;
+      background: var(--code-bg);
+      font-weight: 600;
+    }
+
+    .page-nav {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      font-size: 0.875rem;
+      color: var(--text-muted) !important;
+      text-decoration: none !important;
+      border-radius: 8px;
+      transition: color var(--transition), background var(--transition);
+    }
+
+    .page-nav:hover {
+      color: var(--text) !important;
+      background: var(--code-bg);
+    }
+
+    .page-nav.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    @media (max-width: 480px) {
+      .video-link {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .video-thumb {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+      }
+
+      .video-thumb-placeholder {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+      }
+    }
+  </style>
+</Layout>

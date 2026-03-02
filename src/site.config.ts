@@ -51,9 +51,32 @@ export const siteConfig = {
   nav: {
     /** Label for the blog link in the header and footer */
     blogLabel: 'Blog',
+    /** Label for the videos link in the header and footer. Set to "" to hide. */
+    videosLabel: 'Videos',
     /** Label for the about link in the header and footer */
     aboutLabel: 'About',
   },
+
+  /**
+   * Section headings on the homepage.
+   * Change these to match your content (e.g. "Articles", "Talks", "Episodes").
+   */
+  sections: {
+    writings: 'Latest Writings',
+    videos: 'Latest Videos',
+  },
+
+  /**
+   * External links shown in the "Latest Videos" section on the homepage.
+   * Each entry opens in a new tab. Set to an empty array [] to hide the section.
+   * Works for YouTube, podcast episodes, conference talks — any external URL.
+   */
+  videos: [
+    { title: 'Building a markdown blog with Astro', url: 'https://www.youtube.com/watch?v=Oi9z5gfIHJs' },
+    { title: 'My VS Code setup tour — 2026 edition', url: 'https://www.youtube.com/watch?v=ifTF3ags0XI' },
+    { title: 'CSS custom properties changed everything', url: 'https://www.youtube.com/watch?v=GNrdg3PzpJQ' },
+    { title: 'Pair programming: how to do it well', url: 'https://www.youtube.com/watch?v=vgkahOzFH2Q' },
+  ],
 
   /**
    * Social links shown in the footer.

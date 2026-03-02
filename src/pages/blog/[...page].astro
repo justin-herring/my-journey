@@ -1,0 +1,258 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../layouts/Layout.astro';
+import { siteConfig } from '../../site.config';
+
+type PostModule = {
+  frontmatter: {
+    title: string;
+    description?: string;
+    pubDate?: string;
+    author?: string;
+    readingTime?: number;
+  };
+  url: string;
+};
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const postImportResult = import.meta.glob('../posts/*.md', { eager: true });
+
+  const posts = Object.values(postImportResult as Record<string, PostModule>)
+    .map((post) => ({
+      title: post.frontmatter.title,
+      description: post.frontmatter.description ?? '',
+      pubDate: post.frontmatter.pubDate
+        ? new Date(post.frontmatter.pubDate)
+        : null,
+      author: post.frontmatter.author ?? siteConfig.author.name,
+      readingTime: post.frontmatter.readingTime ?? null,
+      url: post.url,
+    }))
+    .sort((a, b) => {
+      if (!a.pubDate || !b.pubDate) return 0;
+      return b.pubDate.getTime() - a.pubDate.getTime();
+    });
+
+  return paginate(posts, { pageSize: 10 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const isFirstPage = page.currentPage === 1;
+---
+
+<Layout title={isFirstPage ? `Blog — ${siteConfig.title}` : `Blog · Page ${page.currentPage} — ${siteConfig.title}`}>
+  <div class="page-header">
+    <h1 class="page-title">All Writings</h1>
+    <p class="page-count">{page.total} articles</p>
+  </div>
+
+  <ul class="post-list">
+    {page.data.map((post) => (
+      <li>
+        <a href={post.url} class="post-link">
+          <div class="post-meta">
+            {post.pubDate && (
+              <time datetime={post.pubDate.toISOString()}>
+                {post.pubDate.toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </time>
+            )}
+            {post.readingTime && (
+              <span> &middot; {post.readingTime} min read</span>
+            )}
+          </div>
+          <h2 class="post-title">{post.title}</h2>
+          {post.description && (
+            <p class="post-desc">{post.description}</p>
+          )}
+          <span class="post-arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  {page.lastPage > 1 && (
+    <nav class="pagination" aria-label="Pagination">
+      {page.url.prev ? (
+        <a href={page.url.prev} class="page-nav prev">&larr;</a>
+      ) : (
+        <span class="page-nav prev disabled">&larr;</span>
+      )}
+
+      <div class="page-numbers">
+        {Array.from({ length: page.lastPage }, (_, i) => i + 1).map((num) => (
+          num === page.currentPage ? (
+            <span class="page-num current">{num}</span>
+          ) : (
+            <a href={num === 1 ? '/markdown-blog/blog/' : `/markdown-blog/blog/${num}/`} class="page-num">{num}</a>
+          )
+        ))}
+      </div>
+
+      {page.url.next ? (
+        <a href={page.url.next} class="page-nav next">&rarr;</a>
+      ) : (
+        <span class="page-nav next disabled">&rarr;</span>
+      )}
+    </nav>
+  )}
+
+  <style>
+    .page-header {
+      max-width: var(--max-width);
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-family: var(--font-sans);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.25rem;
+    }
+
+    .page-count {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .post-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-width: var(--max-width);
+    }
+
+    .post-list li {
+      border-top: 1px solid var(--border);
+    }
+
+    .post-list li:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post-link {
+      display: block;
+      padding: 1.5rem 0;
+      padding-right: 2rem;
+      text-decoration: none !important;
+      color: inherit !important;
+      position: relative;
+    }
+
+    .post-link:hover {
+      color: inherit !important;
+    }
+
+    .post-link:hover .post-title {
+      color: var(--accent);
+    }
+
+    .post-link:hover .post-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .post-meta {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: 0.375rem;
+    }
+
+    .post-title {
+      font-family: var(--font-serif);
+      font-size: 1.375rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.25rem;
+      line-height: 1.3;
+      transition: color var(--transition);
+    }
+
+    .post-desc {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .post-arrow {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateX(-4px);
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity var(--transition), transform var(--transition);
+      font-size: 1.125rem;
+    }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      max-width: var(--max-width);
+      margin-top: 3rem;
+      padding-top: 2rem;
+    }
+
+    .page-numbers {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .page-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted) !important;
+      text-decoration: none !important;
+      border-radius: 8px;
+      transition: color var(--transition), background var(--transition);
+    }
+
+    .page-num:hover {
+      color: var(--text) !important;
+      background: var(--code-bg);
+    }
+
+    .page-num.current {
+      color: var(--text) !important;
+      background: var(--code-bg);
+      font-weight: 600;
+    }
+
+    .page-nav {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      font-size: 0.875rem;
+      color: var(--text-muted) !important;
+      text-decoration: none !important;
+      border-radius: 8px;
+      transition: color var(--transition), background var(--transition);
+    }
+
+    .page-nav:hover {
+      color: var(--text) !important;
+      background: var(--code-bg);
+    }
+
+    .page-nav.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  </style>
+</Layout>

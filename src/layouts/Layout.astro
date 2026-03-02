@@ -257,7 +257,10 @@ const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
         <div class="header-left">
           <a href="/markdown-blog/" class="site-name">{siteConfig.name}</a>
           <nav>
-            <a href="/markdown-blog/" class="nav-link">{siteConfig.nav.blogLabel}</a>
+            <a href="/markdown-blog/blog/" class="nav-link">{siteConfig.nav.blogLabel}</a>
+            {siteConfig.nav.videosLabel && (
+              <a href="/markdown-blog/videos/" class="nav-link">{siteConfig.nav.videosLabel}</a>
+            )}
             <a href="/markdown-blog/about/" class="nav-link">{siteConfig.nav.aboutLabel}</a>
           </nav>
         </div>
@@ -275,7 +278,10 @@ const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
       <div class="footer-inner">
         <p class="footer-copy">&copy; {currentYear} {siteConfig.footer.copyright}</p>
         <div class="footer-nav">
-          <a href="/markdown-blog/">{siteConfig.nav.blogLabel}</a>
+          <a href="/markdown-blog/blog/">{siteConfig.nav.blogLabel}</a>
+          {siteConfig.nav.videosLabel && (
+            <a href="/markdown-blog/videos/">{siteConfig.nav.videosLabel}</a>
+          )}
           <a href="/markdown-blog/about/">{siteConfig.nav.aboutLabel}</a>
           {Object.entries(siteConfig.social)
             .filter(([, url]) => url)

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#1a1a1a"/>
+  <rect x="40" y="40" width="720" height="320" rx="12" fill="#0d0d0d"/>
+  <circle cx="70" cy="65" r="7" fill="#ff5f57"/>
+  <circle cx="95" cy="65" r="7" fill="#febc2e"/>
+  <circle cx="120" cy="65" r="7" fill="#28c840"/>
+  <text x="60" y="120" font-family="monospace" font-size="15" fill="#79b8ff">~</text>
+  <text x="80" y="120" font-family="monospace" font-size="15" fill="#e5e5e5">npm run dev</text>
+  <text x="60" y="150" font-family="monospace" font-size="15" fill="#888">Local: http://localhost:4321</text>
+  <text x="60" y="180" font-family="monospace" font-size="15" fill="#28c840">Ready in 142ms</text>
+  <text x="60" y="230" font-family="monospace" font-size="15" fill="#79b8ff">~</text>
+  <text x="80" y="230" font-family="monospace" font-size="15" fill="#e5e5e5">git add . &amp;&amp; git push</text>
+  <text x="60" y="260" font-family="monospace" font-size="15" fill="#888">Enumerating objects: 5, done.</text>
+  <text x="60" y="290" font-family="monospace" font-size="15" fill="#28c840">main -> main</text>
+  <rect x="60" y="320" width="10" height="18" fill="#79b8ff" opacity="0.8"/>
+</svg>

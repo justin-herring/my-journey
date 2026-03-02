@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="#fafafa"/>
+  <rect x="40" y="40" width="160" height="160" rx="12" fill="#0070f3"/>
+  <rect x="220" y="40" width="160" height="160" rx="12" fill="#111"/>
+  <rect x="400" y="40" width="160" height="160" rx="12" fill="#ededed"/>
+  <rect x="580" y="40" width="160" height="160" rx="12" fill="#79b8ff"/>
+  <text x="80" y="130" font-family="system-ui" font-size="12" fill="#fff" text-anchor="middle">Accent</text>
+  <text x="120" y="130" font-family="system-ui" font-size="12" fill="#fff" text-anchor="middle">#0070f3</text>
+  <text x="260" y="130" font-family="system-ui" font-size="12" fill="#fff" text-anchor="middle">Text</text>
+  <text x="300" y="130" font-family="system-ui" font-size="12" fill="#fff" text-anchor="middle">#111111</text>
+  <rect x="40" y="240" width="700" height="50" rx="8" fill="#e5e5e5"/>
+  <rect x="60" y="255" width="200" height="20" rx="4" fill="#ccc"/>
+  <rect x="40" y="310" width="700" height="50" rx="8" fill="#e5e5e5"/>
+  <rect x="60" y="325" width="300" height="20" rx="4" fill="#ccc"/>
+</svg>

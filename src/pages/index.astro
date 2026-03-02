@@ -46,7 +46,7 @@ const showAvatar = hasImage || !!initials;
   <section class="hero">
     {showAvatar && (
       <img
-        src={hasImage ? `/markdown-blog${siteConfig.heroImage}` : generatedAvatar}
+        src={hasImage ? `/my-journey${siteConfig.heroImage}` : generatedAvatar}
         alt={siteConfig.author.name}
         class="hero-image"
         width="120"
@@ -56,7 +56,7 @@ const showAvatar = hasImage || !!initials;
     <h1 class="hero-title">{siteConfig.heroTitle}</h1>
     <p class="hero-desc">
       {siteConfig.tagline}{' '}
-      <a href="/markdown-blog/about/" class="about-link">about me <span class="about-arrow">&rarr;</span></a>
+      <a href="/my-journey/about/" class="about-link">about me <span class="about-arrow">&rarr;</span></a>
     </p>
   </section>
 
@@ -75,7 +75,7 @@ const showAvatar = hasImage || !!initials;
           </li>
         ))}
       </ul>
-      <a href="/markdown-blog/videos/" class="view-all">View all <span class="view-all-arrow">&rarr;</span></a>
+      <a href="/my-journey/videos/" class="view-all">View all <span class="view-all-arrow">&rarr;</span></a>
     </section>
   )}
 
@@ -115,7 +115,7 @@ const showAvatar = hasImage || !!initials;
         ))}
       </ul>
     )}
-    <a href="/markdown-blog/blog/" class="view-all">View all <span class="view-all-arrow">&rarr;</span></a>
+    <a href="/my-journey/blog/" class="view-all">View all <span class="view-all-arrow">&rarr;</span></a>
   </section>
 
   <style>

@@ -1,7 +1,7 @@
 ---
 layout: ../layouts/AboutLayout.astro
-title: "About Lenora Porter"
-greeting: "Hi, I'm Lenora."
+title: "About Justin Herring"
+greeting: "Hi, I'm Justin."
 lede: "This is a markdown-first blog where I share notes, career stories, and experiments in public. Every article starts as a simple .md file committed to GitHub."
 ---
 

@@ -3,11 +3,11 @@ layout: ../../layouts/PostLayout.astro
 title: "Morning pages for developers"
 description: "How 15 minutes of unstructured writing each morning made me a better thinker and builder."
 pubDate: "2026-02-18"
-author: "Lenora Porter"
+author: "Justin Herring"
 readingTime: 3
 ---
 
-![A notebook with handwritten thoughts](/markdown-blog/images/notebook.svg)
+![A notebook with handwritten thoughts](/my-journey/images/notebook.svg)
 
 Six months ago I started writing three pages of longhand every morning. No structure, no topic, no audience. Just whatever comes out.
 

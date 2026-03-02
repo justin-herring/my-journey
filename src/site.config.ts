@@ -34,7 +34,7 @@ export const siteConfig = {
    * Only used when heroImage is "". Defaults to author initials if left empty.
    * Examples: "LP", "J", "✦"
    */
-  heroImageLetter: 'J',
+  heroImageLetter: '',
 
   /**
    * Favicon letter or character shown in the browser tab.

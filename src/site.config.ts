@@ -82,7 +82,7 @@ export const siteConfig = {
    * Set any to "" to hide it. Add or remove entries as needed.
    */
   social: {
-    github: 'https://github.com/justinherring',
+    github: 'https://github.com/justin-herring',
     linkedin: 'https://linkedin.com/in/justinherring',
     twitter: '',
   },

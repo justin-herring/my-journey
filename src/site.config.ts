@@ -83,7 +83,7 @@ export const siteConfig = {
    */
   social: {
     github: 'https://github.com/justin-herring',
-    linkedin: 'https://linkedin.com/in/justinherring',
+    linkedin: 'https://www.linkedin.com/in/justin-herring-6955a02b7/',
     twitter: '',
   },
 

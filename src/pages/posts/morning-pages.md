@@ -61,3 +61,15 @@ Push through. The discomfort is the point.
 Tomorrow morning, before you open your laptop, open a notebook or a blank text file. Set a timer for 15 minutes. Write whatever comes to mind. Don't stop, don't edit, don't think about it too hard.
 
 Do it for a week. If it doesn't help, stop. But I think you'll be surprised.
+
+```bash
+# Save current work
+git stash
+
+# Switch branches, do something else
+git checkout main
+
+# Come back and restore
+git checkout feature-branch
+git stash pop
+```

@@ -20,6 +20,15 @@ I stole the idea from Julia Cameron's *The Artist's Way*, but I've adapted it fo
 3. Don't edit, don't re-read, don't judge
 4. There is no wrong way to do this
 
+```
+fix stuff
+update
+wip
+final version
+final version 2
+ok actually final
+```
+
 Most mornings, the first page is garbage. Complaints about sleep, random anxieties, grocery lists. But somewhere on page two, something interesting usually shows up. A connection I hadn't made. A solution to a problem I'd been stuck on. A project idea that actually excites me.
 
 ## Why it works for developers

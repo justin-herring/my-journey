@@ -19,7 +19,6 @@ export const siteConfig = {
   /** Short bio shown below the hero title. A link to the about page is added automatically. */
   tagline:
     'After searching for a career path thaat would challenge me and push me to grow, I found myself drawn to identity, access, and the systems that quietly power the cloud. What started as curiosity turned into hands on projects, late night labs, and a deep respect for how secure infrastructure is built. This site documents the journey. The lessons, the experiments, the milestones, and progress along the way. Continue to learn more  ',
-
   /**
    * Hero image shown at the top of the homepage.
    * Option 1: Place your image in the public/ folder and set the path here.

@@ -1,13 +1,14 @@
 ---
 import Layout from './Layout.astro';
 
+const { frontmatter = {} } = Astro.props as { frontmatter?: Record<string, any> };
 const {
   title = 'Untitled post',
   description,
   pubDate,
   author = 'Lenora Porter',
   readingTime,
-} = Astro.props;
+} = frontmatter;
 
 const published =
   pubDate instanceof Date ? pubDate : pubDate ? new Date(pubDate) : null;
@@ -20,7 +21,11 @@ const minutes =
 ---
 
 <Layout title={title}>
+  <div class="progress-bar" id="progress-bar" aria-hidden="true" />
+
   <article class="post">
+    <a href="/markdown-blog/" class="back-link">← Back to blog</a>
+
     <header class="post-header">
       <p class="eyebrow">Article</p>
       <h1>{title}</h1>
@@ -28,7 +33,7 @@ const minutes =
       <div class="meta-row">
         {published && (
           <p class="meta-chip">
-            <span>Published</span>
+            <span class="meta-label">Published</span>
             <time datetime={published.toISOString()}>
               {published.toLocaleDateString(undefined, {
                 year: 'numeric',
@@ -41,7 +46,7 @@ const minutes =
 
         {author && (
           <p class="meta-chip">
-            <span>Author</span>
+            <span class="meta-label">Author</span>
             <a href="/markdown-blog/about/" class="author-link">
               <strong>{author}</strong>
             </a>
@@ -50,7 +55,7 @@ const minutes =
 
         {minutes && minutes > 0 && (
           <p class="meta-chip">
-            <span>Reading time</span>
+            <span class="meta-label">Read</span>
             <strong>
               {minutes} min{minutes > 1 ? 's' : ''}
             </strong>
@@ -61,47 +66,103 @@ const minutes =
       {description && <p class="description">{description}</p>}
     </header>
 
+    <hr class="content-divider" />
+
     <div class="post-body">
       <slot />
     </div>
   </article>
 
+  <script>
+    function setupProgress() {
+      const bar = document.getElementById('progress-bar');
+      if (!bar) return;
+
+      const update = () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        bar.style.width = `${Math.min(progress, 100)}%`;
+      };
+
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupProgress);
+    } else {
+      setupProgress();
+    }
+    document.addEventListener('astro:after-swap', setupProgress);
+  </script>
+
   <style>
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #7c3aed);
+      z-index: 200;
+      transition: width 0.08s linear;
+      border-radius: 0 2px 2px 0;
+    }
+
     .post {
       max-width: 720px;
       margin: 0 auto;
     }
 
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 1.25rem;
+      transition: color 200ms ease;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
     .post-header {
-      margin-bottom: 1.8rem;
+      margin-bottom: 0;
     }
 
     .eyebrow {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
-      color: var(--text-muted);
-      margin: 0 0 0.4rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin: 0 0 0.5rem;
     }
 
     h1 {
-      margin: 0 0 0.6rem;
-      font-size: clamp(2rem, 3vw, 2.5rem);
+      margin: 0 0 0.75rem;
+      font-size: clamp(2rem, 3.5vw, 2.6rem);
       letter-spacing: -0.04em;
+      line-height: 1.15;
     }
 
     .description {
       margin: 1rem 0 0;
       color: var(--text-muted);
-      font-size: 0.98rem;
+      font-size: 1rem;
       max-width: 36rem;
+      line-height: 1.6;
     }
 
     .meta-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 0.4rem;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
     }
 
     .meta-chip {
@@ -114,12 +175,19 @@ const minutes =
       font-size: 0.78rem;
       color: var(--text-muted);
       background: var(--chip-bg);
+      margin: 0;
+      transition: transform 150ms ease, box-shadow 150ms ease;
     }
 
-    .meta-chip span {
+    .meta-chip:hover {
+      transform: scale(1.03);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    }
+
+    .meta-label {
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
     }
 
     .meta-chip time,
@@ -139,16 +207,24 @@ const minutes =
       text-underline-offset: 0.16em;
     }
 
+    /* Content divider */
+    .content-divider {
+      border: none;
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 2rem auto;
+      max-width: 80px;
+    }
+
+    /* Post body typography */
     .post-body {
-      padding-top: 0.75rem;
-      border-top: 1px solid var(--border-subtle);
-      font-size: 0.98rem;
-      line-height: 1.7;
+      font-size: 1.05rem;
+      line-height: 1.75;
       color: var(--text-main);
     }
 
     .post-body p {
-      margin: 0 0 1rem;
+      margin: 0 0 1.25rem;
     }
 
     .post-body p:last-child {
@@ -157,35 +233,35 @@ const minutes =
 
     .post-body h2,
     .post-body h3 {
-      margin-top: 1.8rem;
-      margin-bottom: 0.6rem;
+      margin-top: 2.25rem;
+      margin-bottom: 0.75rem;
       letter-spacing: -0.02em;
     }
 
     .post-body h2 {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
     }
 
     .post-body h3 {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
     }
 
     .post-body ul,
     .post-body ol {
-      margin: 0 0 1rem 1.25rem;
+      margin: 0 0 1.25rem 1.25rem;
       padding: 0;
     }
 
     .post-body li + li {
-      margin-top: 0.25rem;
+      margin-top: 0.35rem;
     }
 
     .post-body code {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         'Liberation Mono', 'Courier New', monospace;
-      font-size: 0.85rem;
-      padding: 0.1rem 0.32rem;
-      border-radius: 0.3rem;
+      font-size: 0.85em;
+      padding: 0.15rem 0.35rem;
+      border-radius: 0.35rem;
       background: var(--accent-soft);
     }
 
@@ -193,16 +269,33 @@ const minutes =
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         'Liberation Mono', 'Courier New', monospace;
       font-size: 0.85rem;
-      margin: 1.25rem 0;
-      padding: 0.9rem 1rem;
-      border-radius: 0.7rem;
-      background: #020617;
-      color: #e5e7eb;
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      background: #0f172a;
+      color: #e2e8f0;
       overflow-x: auto;
+      border: 1px solid rgba(148, 163, 184, 0.1);
     }
 
-    :root[data-theme='dark'] .post-body pre {
-      background: #020617;
+    .post-body pre code {
+      background: none;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    .post-body blockquote {
+      margin: 1.5rem 0;
+      padding: 1rem 1.25rem;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-soft);
+      border-radius: 0 0.5rem 0.5rem 0;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .post-body blockquote p {
+      margin: 0;
     }
 
     .post-body a {
@@ -210,6 +303,19 @@ const minutes =
       text-decoration-thickness: 1px;
       text-underline-offset: 0.16em;
     }
+
+    .post-body hr {
+      border: none;
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 2rem 0;
+    }
+
+    .post-body img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      margin: 1.5rem 0;
+    }
   </style>
 </Layout>
-

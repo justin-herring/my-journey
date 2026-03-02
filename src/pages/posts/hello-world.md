@@ -1,7 +1,9 @@
 ---
+layout: ../../layouts/PostLayout.astro
 title: "Hello, world"
 description: "Your first markdown-powered blog post."
 pubDate: "2026-03-02"
+author: "Lenora Porter"
 ---
 
 Welcome to your new markdown blog! 🎉

@@ -17,7 +17,7 @@ export const siteConfig = {
   heroTitle: "I'm Justin — an aspiring engineer documenting my journey",
 
   /** Short bio shown below the hero title. A link to the about page is added automatically. */
-  tagline:'After searching for a career path that would challenge me and push me to grow, I found myself drawn to identity, access, and the systems that quietly power the cloud. What started as curiosity turned into hands on projects, late night labs, and a deep respect for how secure infrastructure is built.' + '\n' + 'This site documents the journey. The lessons, the experiments, the milestones, and progress along the way. Continue to learn more  ',  /**
+  tagline:'After searching for a career path that would challenge me and push me to grow, I found myself drawn to identity, access, and the systems that quietly power the cloud. What started as curiosity turned into hands on projects, late night labs, and a deep respect for how secure infrastructure is built. \nThis site documents the journey. The lessons, the experiments, the milestones, and progress along the way. Continue to learn more  ',  /**
    * Hero image shown at the top of the homepage.
    * Option 1: Place your image in the public/ folder and set the path here.
    *           Examples: "/avatar.jpg", "/logo.png"

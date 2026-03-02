@@ -1,0 +1,149 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const postImportResult = import.meta.glob('./posts/*.md', { eager: true });
+
+type PostModule = {
+  frontmatter: {
+    title: string;
+    description?: string;
+    pubDate?: string;
+  };
+  url: string;
+};
+
+const posts = Object.values(postImportResult as Record<string, PostModule>)
+  .map((post) => ({
+    title: post.frontmatter.title,
+    description: post.frontmatter.description ?? '',
+    pubDate: post.frontmatter.pubDate
+      ? new Date(post.frontmatter.pubDate)
+      : null,
+    url: post.url,
+  }))
+  .sort((a, b) => {
+    if (!a.pubDate || !b.pubDate) return 0;
+    return b.pubDate.getTime() - a.pubDate.getTime();
+  });
+---
+
+<Layout title="My Markdown Blog">
+  <section>
+    <h1>My Markdown Blog</h1>
+    <p class="lead">
+      A super simple blog where every post is just a Markdown file committed to
+      GitHub.
+    </p>
+
+    {posts.length === 0 ? (
+      <p class="empty">
+        No posts yet. Add your first markdown file in
+        <code>src/pages/posts/</code>.
+      </p>
+    ) : (
+      <ul class="post-list">
+        {posts.map((post) => (
+          <li>
+            <a href={post.url}>
+              <h2>{post.title}</h2>
+            </a>
+            {post.pubDate && (
+              <p class="meta">
+                {post.pubDate.toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </p>
+            )}
+            {post.description && <p class="description">{post.description}</p>}
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <style>
+    h1 {
+      font-size: clamp(2.1rem, 3vw, 2.6rem);
+      margin: 0 0 0.4rem;
+      letter-spacing: -0.03em;
+    }
+
+    .lead {
+      margin: 0 0 2rem;
+      color: #6b7280;
+      font-size: 0.98rem;
+      max-width: 34rem;
+    }
+
+    .empty {
+      margin-top: 1rem;
+      color: #9ca3af;
+      font-size: 0.95rem;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        'Liberation Mono', 'Courier New', monospace;
+      background: #f3f4f6;
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.35rem;
+      font-size: 0.86rem;
+      margin-left: 0.25rem;
+    }
+
+    .post-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .post-list li {
+      padding: 1rem 1.1rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(
+        circle at top left,
+        rgba(219, 234, 254, 0.7),
+        #ffffff
+      );
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+      transition: transform 0.15s ease, box-shadow 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    .post-list li:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+      border-color: rgba(59, 130, 246, 0.7);
+    }
+
+    .post-list a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .post-list h2 {
+      margin: 0 0 0.25rem;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .meta {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    .description {
+      margin: 0.45rem 0 0;
+      font-size: 0.95rem;
+      color: #4b5563;
+    }
+  </style>
+</Layout>
+

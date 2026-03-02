@@ -38,14 +38,23 @@ export const getStaticPaths = (async ({ paginate }) => {
 
 const { page } = Astro.props;
 const isFirstPage = page.currentPage === 1;
+
+// Auto-generate initials from author name (e.g. "Lenora Porter" → "LP")
+const initials = siteConfig.heroImageLetter
+  || siteConfig.author.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2);
+
+const generatedAvatar = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="12" fill="%23e5e5e5"/><text x="60" y="72" font-family="system-ui,sans-serif" font-size="44" font-weight="600" fill="%23666" text-anchor="middle">${initials}</text></svg>`;
+
+const hasImage = !!siteConfig.heroImage;
+const showAvatar = hasImage || !!initials;
 ---
 
 <Layout title={isFirstPage ? siteConfig.title : `Page ${page.currentPage} — ${siteConfig.title}`}>
   {isFirstPage && (
     <section class="hero">
-      {siteConfig.heroImage && (
+      {showAvatar && (
         <img
-          src={`/markdown-blog${siteConfig.heroImage}`}
+          src={hasImage ? `/markdown-blog${siteConfig.heroImage}` : generatedAvatar}
           alt={siteConfig.author.name}
           class="hero-image"
           width="120"

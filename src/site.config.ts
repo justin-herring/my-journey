@@ -22,11 +22,26 @@ export const siteConfig = {
 
   /**
    * Hero image shown at the top of the homepage.
-   * Place your image in the public/ folder and reference it here.
-   * Set to "" to hide the image. Accepts any path relative to public/.
-   * Examples: "/avatar.jpg", "/logo.png"
+   * Option 1: Place your image in the public/ folder and set the path here.
+   *           Examples: "/avatar.jpg", "/logo.png"
+   * Option 2: Set to "" to use an auto-generated avatar from your initials.
+   * Option 3: Set heroImage to "" and heroImageLetter to "" to hide the image entirely.
    */
   heroImage: '/jessica-felicio-QS9ZX5UnS14-unsplash.jpg',
+
+  /**
+   * Fallback letter/initials for the auto-generated avatar.
+   * Only used when heroImage is "". Defaults to author initials if left empty.
+   * Examples: "LP", "J", "✦"
+   */
+  heroImageLetter: '',
+
+  /**
+   * Favicon letter or character shown in the browser tab.
+   * Change this to any single letter, emoji, or short string.
+   * Examples: "L", "✦", "🚀"
+   */
+  faviconLetter: 'M',
 
   author: {
     /** Full name — used as the default post author, in meta chips, and the footer */

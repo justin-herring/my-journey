@@ -4,12 +4,14 @@ import { siteConfig } from '../site.config';
 
 const { title = siteConfig.title } = Astro.props;
 const currentYear = new Date().getFullYear();
+const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="%23111"/><text x="16" y="23" font-family="system-ui,sans-serif" font-size="20" font-weight="700" fill="%23fff" text-anchor="middle">${siteConfig.faviconLetter}</text></svg>`;
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href={`data:image/svg+xml,${faviconSvg}`} />
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
